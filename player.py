@@ -7,6 +7,15 @@ screen = pygame.display.set_mode((ScreenWidth,ScreenHeight))
 clock = pygame.time.Clock()
 green = (0, 255,0)
 
+
+player = pygame.image.load('Player.png') #load your spritesheet
+player.set_colorkey((255,0,255))
+
+frameWidth = 70
+frameHeight = 50
+RowNum = 0
+frameNum = 0
+
 doExit = False
 Px = 0
 Py = 700
@@ -51,7 +60,7 @@ while not doExit:
     Px += Vx
     
     screen.fill((0,0,0))
-    pygame.draw.rect(screen, (green), (Px, Py, 70, 50))
-    
+    #pygame.draw.rect(screen, (green), (Px, Py, 70, 50))
+    screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
     pygame.display.flip()
 pygame.quit()
