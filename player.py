@@ -11,6 +11,10 @@ green = (0, 255,0)
 player = pygame.image.load('Player.png') #load your spritesheet
 player.set_colorkey((255,0,255))
 
+death = pygame.image.load("Death.png")
+death.set_colorkey((255,0,255))
+
+
 frameWidth = 70
 frameHeight = 50
 RowNum = 0
@@ -23,8 +27,10 @@ Vx = 0
 #constants
 LEFT = 0
 RIGHT = 1
-keys = [False, False]
+SPACE = 2
+keys = [False, False, False]
 while not doExit:
+    PlayerDeath = False
     clock.tick(60)
     
     for event in pygame.event.get(): #quit game if x is pressed in top corner
@@ -36,6 +42,9 @@ while not doExit:
                 keys[LEFT]=True
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=True
+                
+            elif event.key == pygame.K_SPACE:
+                keys[SPACE] = True
 
             
         if event.type == pygame.KEYUP: #keyboard input
@@ -44,6 +53,8 @@ while not doExit:
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=False
                 
+            elif event.key == pygame.K_SPACE:
+                keys[SPACE] = False
     #left movement            
     if keys[LEFT]==True:
         Vx = -5
@@ -54,6 +65,9 @@ while not doExit:
         Vx = 5
         direction = RIGHT
         
+        
+    elif keys[SPACE] == True:
+        PlayerDeath = True
     else:
         Vx = 0
     #updating player
@@ -62,5 +76,15 @@ while not doExit:
     screen.fill((0,0,0))
     #pygame.draw.rect(screen, (green), (Px, Py, 70, 50))
     screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
+    
+    #playing the player death animation
+    if PlayerDeath == True:
+        i = 0
+        while i < 4:
+            screen.fill((0,0,0))
+            screen.blit(death, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
+            RowNum += 1
+            i +=1
+        doExit = True
     pygame.display.flip()
 pygame.quit()
