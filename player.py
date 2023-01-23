@@ -23,7 +23,7 @@ frameNum = 0
 
 doExit = False
 Px = 0
-Py = 700
+Py = ScreenHeight - 50
 Vx = 0
 #constants
 LEFT = 0
