@@ -27,7 +27,7 @@ Vx = 0
 #constants
 LEFT = 0
 RIGHT = 1
-SPACE = 2
+D = 2
 keys = [False, False, False]
 while not doExit:
     PlayerDeath = False
@@ -43,8 +43,8 @@ while not doExit:
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=True
                 
-            elif event.key == pygame.K_SPACE:
-                keys[SPACE] = True
+            elif event.key == pygame.K_d:
+                keys[D] = True
 
             
         if event.type == pygame.KEYUP: #keyboard input
@@ -53,8 +53,8 @@ while not doExit:
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=False
                 
-            elif event.key == pygame.K_SPACE:
-                keys[SPACE] = False
+            elif event.key == pygame.K_d:
+                keys[D] = False
     #left movement            
     if keys[LEFT]==True:
         Vx = -5
@@ -66,7 +66,7 @@ while not doExit:
         direction = RIGHT
         
         
-    elif keys[SPACE] == True:
+    elif keys[D] == True:
         PlayerDeath = True
     else:
         Vx = 0
