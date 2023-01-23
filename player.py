@@ -1,4 +1,5 @@
 import pygame
+import time
 pygame.init()
 pygame.display.set_caption("Inchaders")
 ScreenWidth = 800
@@ -30,21 +31,24 @@ RIGHT = 1
 D = 2
 keys = [False, False, False]
 while not doExit:
+    font = pygame.font.SysFont('calibri.ttf', 38)
     PlayerDeath = False
     clock.tick(60)
     
     for event in pygame.event.get(): #quit game if x is pressed in top corner
         if event.type == pygame.QUIT:
             gameover = True
-      
+        keylol = pygame.key.get_pressed()
+        
         if event.type == pygame.KEYDOWN: #keyboard input
             if event.key == pygame.K_LEFT:
                 keys[LEFT]=True
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=True
-                
-            elif event.key == pygame.K_d:
-                keys[D] = True
+        
+     
+        if keylol[pygame.K_d]:
+            keys[D] = True
 
             
         if event.type == pygame.KEYUP: #keyboard input
@@ -53,8 +57,7 @@ while not doExit:
             elif event.key == pygame.K_RIGHT:
                 keys[RIGHT]=False
                 
-            elif event.key == pygame.K_d:
-                keys[D] = False
+
     #left movement            
     if keys[LEFT]==True:
         Vx = -5
@@ -85,6 +88,9 @@ while not doExit:
             screen.blit(death, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
             RowNum += 1
             i +=1
-        doExit = True
+        time.sleep(10/100)
+        text = font.render('GAME OVER', True, (0, 250, 100))
+        screen.blit(text, (ScreenWidth/2.5, ScreenHeight/2))    
+
     pygame.display.flip()
 pygame.quit()
