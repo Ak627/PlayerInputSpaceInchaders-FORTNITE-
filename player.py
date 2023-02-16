@@ -75,7 +75,7 @@ class Alien:
         self.isAlive = True
         self.direction = 1
     def move(self, time):
-        if time % 500 == 0:
+        if time % 520 == 0:
             self.ypos +=100
             self.direction *=-1
             return 0
@@ -186,6 +186,7 @@ while not doExit:
                 bullet.isAlive = armada[i].collide(bullet.xpos, bullet.ypos)
                 if bullet.isAlive == False:
                     break
+        if bullet.isAlive == True:
             for i in range(len(walls)):
                 bullet.isAlive = walls[i].collide(bullet.xpos, bullet.ypos)
                 if bullet.isAlive == False:
