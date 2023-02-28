@@ -11,6 +11,9 @@ clock = pygame.time.Clock()
 green = (0, 255,0)
 
 timer = 0
+back = pygame.image.load('Stars.png') #load your spritesheet
+
+pew = pygame.mixer.Sound('pew.ogg')
 
 frameWidth = 50
 frameHeight = 38
@@ -120,8 +123,6 @@ class Bullet:
             self.isAlive = False
             self.xpos = xpos
             self.ypos = ypos
-    
-  
     def draw(self):
             pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 3, 20))
             
@@ -193,7 +194,10 @@ while lives > 0:
         
         
     if keys[SPACE] == True:
+        pygame.mixer.Sound.play(pew)
+
         shoot = True
+
     else:
         shoot = False
         
@@ -249,20 +253,24 @@ while lives > 0:
             if missles[i].xpos < Px + 50:
                 if missles[i].ypos > Py:
                     if missles[i].ypos < Py + 38:
-                        
                         lives -= 1
                         time.sleep(1)
                         Px = 0
                         
-                        print("Player is hit")
+    for i in range(len(armada)):
+            if armada[i].ypos > Py:
+                        lives -= 3
+                        time.sleep(1)
             
     #updating player
     Px += Vx
     screen.fill((0,0,0))
+    screen.blit(back ,(0,0))
     bullet.draw()
     #pygame.draw.rect(screen, (green), (Px, Py, 70, 50))
     my_font = pygame.font.SysFont('Comic Sans MS', 30)
     text_surface = my_font.render('LIVES:', False, (255, 0, 0))
+    number = my_font.render(str(lives), False, (255,0,0))
     
     screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
     for i in range(len(missles)):
@@ -272,6 +280,7 @@ while lives > 0:
     for i in range(len(walls)):
         walls[i].draw()
     screen.blit(text_surface, (0,0))
+    screen.blit(number, (100,0))
     pygame.display.flip()
 pygame.quit()
 
