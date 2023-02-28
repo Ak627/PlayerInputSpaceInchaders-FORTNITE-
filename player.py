@@ -1,4 +1,5 @@
 import pygame
+import random
 import time
 
 pygame.init()
@@ -20,6 +21,9 @@ doExit = False
 Px = 0
 Py = ScreenHeight - 50
 Vx = 0
+
+lives = 3
+
 #constants
 LEFT = 0
 RIGHT = 1
@@ -38,8 +42,7 @@ class Wall:
             if BulletX > self.xpos:
                 if BulletX < self.xpos + 30:
                     if BulletY < self.ypos + 30:
-                        if BulletY > self.ypos:
-                            print("hit!")
+                        if BulletY > self.ypos: 
                             self.numHits += 1
                             return False
         return True
@@ -76,7 +79,7 @@ class Alien:
         self.direction = 1
     def move(self, time):
         if time % 520 == 0:
-            self.ypos +=100
+            self.ypos +=50
             self.direction *=-1
             return 0
         
@@ -118,10 +121,31 @@ class Bullet:
             self.xpos = xpos
             self.ypos = ypos
     
-    
+  
     def draw(self):
             pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 3, 20))
+            
+class Missle:
+    def __init__(self, xpos, ypos):
+        self.xpos = -10
+        self.ypos = -10
+        self.isAlive = False
+    def move(self):
+        if self.isAlive == True:
+            self.ypos += 5
+        if self.ypos > 800:
+            self.isAlive = False
+            self.xpos = -10
+            self.ypos = -10
+    def draw(self):
+        if self.isAlive == True:
+            pygame.draw.rect(screen, (250, 0, 250), (self.xpos, self.ypos, 3, 20))
 
+missles = []
+for i in range(10):
+    missles.append(Missle(i*80+75, 100))
+    
+    
 bullet = Bullet(Px+25, Py)
 
 player = pygame.image.load('Player.png') #load your spritesheet
@@ -131,7 +155,7 @@ death = pygame.image.load("Death.png")
 death.set_colorkey((255,0,255))
 
 
-while not doExit:
+while lives > 0:
     font = pygame.font.SysFont('calibri.ttf', 38)
     PlayerDeath = False
     clock.tick(60)
@@ -174,8 +198,7 @@ while not doExit:
         shoot = False
         
     
-    #updating player
-    Px += Vx
+    
     if shoot == True:
         bullet.isAlive = True
         
@@ -195,21 +218,60 @@ while not doExit:
     else:
         bullet.xpos = Px + 25
         bullet.ypos = Py
-        
+    
+    for i in range(len(walls)):
+        for j in range(len(missles)):
+            if missles[j].isAlive == True:
+                if walls[i].collide(missles[j].xpos, missles[j].ypos) == False:
+                    missles[j].isAlive = False
+                    break
         
     
 
     for i in range(len(armada)):
         timer = armada[i].move(timer)
+    for i in range(len(missles)):
+        missles[i].move()
+        
+    ran = random.randrange(100)
+    if ran < 2:
+        pick = random.randrange(0, len(armada))
+        if armada[pick].isAlive == True:
+            for i in range(len(missles)):
+                if missles[i].isAlive == False:
+                    missles[i].isAlive = True
+                    missles[i].xpos = armada[pick].xpos+25
+                    missles[i].ypos = armada[pick].ypos
+                    break 
+    
+    for i in range(len(missles)):
+        if missles[i].xpos > Px:
+            if missles[i].xpos < Px + 50:
+                if missles[i].ypos > Py:
+                    if missles[i].ypos < Py + 38:
+                        
+                        lives -= 1
+                        time.sleep(1)
+                        Px = 0
+                        
+                        print("Player is hit")
+            
+    #updating player
+    Px += Vx
     screen.fill((0,0,0))
     bullet.draw()
     #pygame.draw.rect(screen, (green), (Px, Py, 70, 50))
-    screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
+    my_font = pygame.font.SysFont('Comic Sans MS', 30)
+    text_surface = my_font.render('LIVES:', False, (255, 0, 0))
     
+    screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
+    for i in range(len(missles)):
+        missles[i].draw()
     for i in range(len(armada)):
         armada[i].draw()
     for i in range(len(walls)):
         walls[i].draw()
+    screen.blit(text_surface, (0,0))
     pygame.display.flip()
 pygame.quit()
 
