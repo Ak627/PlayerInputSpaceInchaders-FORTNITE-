@@ -15,6 +15,7 @@ back = pygame.image.load('Stars.png') #load your spritesheet
 
 pew = pygame.mixer.Sound('pew.ogg')
 scream1 = pygame.mixer.Sound('scream.mp3')
+boom = pygame.mixer.Sound('boom.ogg')
 
 frameWidth = 50
 frameHeight = 38
@@ -213,7 +214,7 @@ while lives > 0:
             for i in range(len(armada)):
                 bullet.isAlive = armada[i].collide(bullet.xpos, bullet.ypos)
                 if bullet.isAlive == False:
-                    pygame.mixer.Sound.play(scream1)
+                    pygame.mixer.Sound.play(boom)
                     break
         if bullet.isAlive == True:
             for i in range(len(walls)):
@@ -256,12 +257,15 @@ while lives > 0:
                 if missles[i].ypos > Py:
                     if missles[i].ypos < Py + 38:
                         lives -= 1
+                        pygame.mixer.Sound.play(scream1)
                         time.sleep(1)
                         Px = 0
                         
     for i in range(len(armada)):
             if armada[i].ypos > Py:
                         lives -= 3
+                        
+
                         time.sleep(1)
             
     #updating player
