@@ -13,9 +13,13 @@ green = (0, 255,0)
 timer = 0
 back = pygame.image.load('Stars.png') #load your spritesheet
 
+life = pygame.image.load('lives.png')
+
 pew = pygame.mixer.Sound('pew.ogg')
 scream1 = pygame.mixer.Sound('scream.mp3')
 boom = pygame.mixer.Sound('boom.ogg')
+victory = pygame.mixer.Sound('victory.wav')
+
 
 frameWidth = 50
 frameHeight = 38
@@ -28,6 +32,7 @@ Py = ScreenHeight - 50
 Vx = 0
 
 lives = 3
+score = 0
 
 #constants
 LEFT = 0
@@ -215,6 +220,7 @@ while lives > 0:
                 bullet.isAlive = armada[i].collide(bullet.xpos, bullet.ypos)
                 if bullet.isAlive == False:
                     pygame.mixer.Sound.play(boom)
+                    score += 100
                     break
         if bullet.isAlive == True:
             for i in range(len(walls)):
@@ -278,6 +284,20 @@ while lives > 0:
     text_surface = my_font.render('LIVES:', False, (255, 0, 0))
     number = my_font.render(str(lives), False, (255,0,0))
     
+    text_s = my_font.render('SCORE:', False, (255, 0, 0))
+    s = my_font.render(str(score), False, (255,0,0))
+    
+    v = my_font.render('Conglaturations!', False, (255,255,255))
+    
+    if(lives == 3):
+            screen.blit(life, (180, 15), (30*frameNum, RowNum*20, 30, 20))
+    if(lives >= 2):
+            screen.blit(life, (140, 15), (30*frameNum, RowNum*20, 30, 20))
+    if(lives >=1):
+            screen.blit(life, (100, 15), (30*frameNum, RowNum*20, 30, 20))
+
+    
+    
     screen.blit(player, (Px, Py), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
     for i in range(len(missles)):
         missles[i].draw()
@@ -286,7 +306,19 @@ while lives > 0:
     for i in range(len(walls)):
         walls[i].draw()
     screen.blit(text_surface, (0,0))
-    screen.blit(number, (100,0))
+    #screen.blit(number, (100,0))
+
+
+    
+    screen.blit(text_s, (600,0))
+    screen.blit(s, (710,0))
+    
+    if score == 3600:
+        pygame.mixer.Sound.play(victory)
+        screen.blit(v, (400,400))
+        time.sleep(2)
+
+    
     pygame.display.flip()
 pygame.quit()
 
