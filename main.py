@@ -317,6 +317,7 @@ while lives > 0:
         pygame.mixer.Sound.play(victory)
         screen.blit(v, (400,400))
         time.sleep(2)
+        lives -= 3
 
     
     pygame.display.flip()
